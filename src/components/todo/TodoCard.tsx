@@ -1,13 +1,14 @@
+import { ITodo } from "@/redux/features/todoSlice";
 import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 
-const TodoCard = () => {
+const TodoCard = ({ todo }: { todo: ITodo }) => {
   return (
     <div className="flex justify-between p-3 bg-slate-900 text-white rounded-md">
       <input type="checkbox" name="check" id="check" />
-      <p>Todo title</p>
-      <p>Todo Time</p>
-      <p>Todo description</p>
+      <p>{todo.title}</p>
+      <p>{new Date(todo.dateTime).toLocaleString()}</p>
+      <p>{todo.description}</p>
       <div className="flex justify-center items-center">
         <Button>
           <TrashIcon className="size-6 text-red-600" />

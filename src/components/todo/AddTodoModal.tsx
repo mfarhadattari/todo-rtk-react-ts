@@ -33,6 +33,7 @@ const AddTodoModal = ({ children }: { children: ReactNode }) => {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const todo = {
+      _id: Math.random().toString(36).slice(2),
       title,
       purity: purity as "high" | "low" | "medium",
       dateTime: new Date(dateTime).toISOString(),

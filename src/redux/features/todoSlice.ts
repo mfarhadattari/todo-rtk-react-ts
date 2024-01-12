@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface ITodo {
+export interface ITodo {
+  _id: string;
   title: string;
   purity: "high" | "low" | "medium";
   dateTime: string;
