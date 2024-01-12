@@ -15,6 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { addTodo } from "@/redux/features/todoSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { Label } from "@radix-ui/react-label";
 import { FormEvent, ReactNode, useState } from "react";
 import { Button } from "../ui/button";
@@ -26,16 +28,18 @@ const AddTodoModal = ({ children }: { children: ReactNode }) => {
   const [dateTime, setDateTime] = useState("");
   const [description, setDescription] = useState("");
 
+  const dispatch = useAppDispatch();
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const todo = {
       title,
-      purity,
+      purity: purity as "high" | "low" | "medium",
       dateTime: new Date(dateTime).toISOString(),
       description,
     };
 
-    console.log(todo);
+    dispatch(addTodo(todo));
   };
 
   return (
