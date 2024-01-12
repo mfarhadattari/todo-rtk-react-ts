@@ -1,3 +1,7 @@
+import { ITodo, TTodoPurity, updateTodo } from "@/redux/features/todoSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { FormEvent, ReactNode, useState } from "react";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogClose,
@@ -7,40 +11,41 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { TTodoPurity, addTodo } from "@/redux/features/todoSlice";
-import { useAppDispatch } from "@/redux/hooks";
-import { Label } from "@radix-ui/react-label";
-import { FormEvent, ReactNode, useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+} from "../ui/select";
 
-const AddTodoModal = ({ children }: { children: ReactNode }) => {
-  const [title, setTitle] = useState("");
-  const [purity, setPurity] = useState("");
-  const [dateTime, setDateTime] = useState("");
-  const [description, setDescription] = useState("");
+const UpdateTodoModal = ({
+  children,
+  todo,
+}: {
+  children: ReactNode;
+  todo: ITodo;
+}) => {
+  const [title, setTitle] = useState(todo.title);
+  const [purity, setPurity] = useState(todo.purity);
+  const [dateTime, setDateTime] = useState(todo.dateTime.split(".")[0]);
+  const [description, setDescription] = useState(todo.description);
 
   const dispatch = useAppDispatch();
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const todo = {
-      _id: Math.random().toString(36).slice(2),
-      title,
-      purity: purity as TTodoPurity,
+    const updatedTodo = {
+      title: title,
+      purity: purity,
       dateTime: new Date(dateTime).toISOString(),
-      description,
+      description: description,
     };
 
-    dispatch(addTodo(todo));
+    dispatch(updateTodo({ _id: todo._id, todo: updatedTodo }));
   };
 
   return (
@@ -61,16 +66,16 @@ const AddTodoModal = ({ children }: { children: ReactNode }) => {
               </Label>
               <Input
                 id="title"
-                required
-                onBlur={(e) => setTitle(e.target.value)}
+                defaultValue={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className="col-span-3"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-left font-medium">Purity</Label>
               <Select
-                required
                 onValueChange={(e) => setPurity(e as TTodoPurity)}
+                defaultValue={purity}
               >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Purity" />
@@ -88,9 +93,9 @@ const AddTodoModal = ({ children }: { children: ReactNode }) => {
               </Label>
               <Input
                 type="datetime-local"
-                required
                 id="datetime"
-                onBlur={(e) => setDateTime(e.target.value)}
+                defaultValue={dateTime}
+                onChange={(e) => setDateTime(e.target.value)}
                 className="col-span-3"
               />
             </div>
@@ -100,15 +105,15 @@ const AddTodoModal = ({ children }: { children: ReactNode }) => {
               </Label>
               <Input
                 id="description"
-                required
-                onBlur={(e) => setDescription(e.target.value)}
+                defaultValue={description}
+                onChange={(e) => setDescription(e.target.value)}
                 className="col-span-3"
               />
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit">Add Task</Button>
+              <Button type="submit">Update Task</Button>
             </DialogClose>
           </DialogFooter>
         </form>
@@ -117,4 +122,4 @@ const AddTodoModal = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default AddTodoModal;
+export default UpdateTodoModal;

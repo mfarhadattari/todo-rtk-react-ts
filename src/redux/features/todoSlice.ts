@@ -1,9 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+export type TTodoPurity = "high" | "low" | "medium";
 export interface ITodo {
   _id: string;
   title: string;
-  purity: "high" | "low" | "medium";
+  purity: TTodoPurity;
   dateTime: string;
   description: string;
   isCompleted?: boolean;
@@ -37,9 +38,24 @@ const todoSlice = createSlice({
       const pendingTodos = state.todos.filter((todo) => !todo.isCompleted);
       state.todos = [...pendingTodos, ...completedTodos];
     },
+    updateTodo: (
+      state,
+      action: PayloadAction<{ _id: string; todo: Partial<ITodo> }>
+    ) => {
+      const remainingTodos = state.todos.filter(
+        (todo) => todo._id !== action.payload._id
+      ) as ITodo[];
+      let updatedTodo = state.todos.find(
+        (todo) => todo._id === action.payload._id
+      );
+      updatedTodo = { ...updatedTodo, ...action.payload.todo } as ITodo;
+
+      state.todos = [...remainingTodos, updatedTodo];
+    },
   },
 });
 
-export const { addTodo, removeTodo, toggleCompleted } = todoSlice.actions;
+export const { addTodo, removeTodo, toggleCompleted, updateTodo } =
+  todoSlice.actions;
 
 export default todoSlice.reducer;
