@@ -7,10 +7,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { TTodoPurity, filterTodos } from "@/redux/features/todoSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { ReactNode, useState } from "react";
 
 const TodoFilter = ({ children }: { children: ReactNode }) => {
-  const [position, setPosition] = useState("bottom");
+  const [value, setValue] = useState("");
+  const dispatch = useAppDispatch();
+
+  const onChange = (value: TTodoPurity) => {
+    setValue(value);
+    dispatch(filterTodos(value));
+  };
 
   return (
     <DropdownMenu>
@@ -18,7 +26,11 @@ const TodoFilter = ({ children }: { children: ReactNode }) => {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Filter Todo</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+        <DropdownMenuRadioGroup
+          value={value}
+          onValueChange={(value) => onChange(value as TTodoPurity)}
+        >
+          <DropdownMenuRadioItem value="">No-Filter</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="low">Low</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="medium">Medium</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="high">High</DropdownMenuRadioItem>
