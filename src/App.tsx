@@ -1,7 +1,9 @@
+import TodoPage from "./pages/TodoPage";
+
 const App = () => {
   return (
     <div>
-      <h1>Todo Application with RTK, React and TS</h1>
+      <TodoPage />
     </div>
   );
 };
